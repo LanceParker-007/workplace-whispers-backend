@@ -17,6 +17,11 @@ app.use(express.json()); // Parses incoming request with JSON payload (it cannot
 app.use(express.urlencoded({ extended: true })); // Parses incming requests with URL-encoded payloads
 app.use(cookieParser()); // Parses cookies attached to the client request
 
+//
+app.get("/", (req, res) => {
+  res.send("Server is up and running");
+});
+
 // import routes
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
