@@ -1,7 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
 import User from "../models/user.models.js";
 
-const checkUsername = expressAsyncHandler(async (req, res) => {
+export const checkUsername = expressAsyncHandler(async (req, res) => {
   const { username } = req.body;
 
   try {
@@ -18,4 +18,6 @@ const checkUsername = expressAsyncHandler(async (req, res) => {
   }
 });
 
-export { checkUsername };
+export const updateUser = expressAsyncHandler(async (req, res) => {
+  const { username } = req.body;
+});

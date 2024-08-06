@@ -25,10 +25,12 @@ app.get("/", (req, res) => {
 // import routes
 import authRouter from "./routes/auth.routes.js";
 import userRouter from "./routes/user.routes.js";
+import postsRouter from "./routes/posts.routes.js";
 
 // routes middleware
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/posts", postsRouter);
 
 // Global error handling middleware
 // to handle error between request and response cycles

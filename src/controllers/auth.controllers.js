@@ -6,7 +6,7 @@ export const signInWithGoogle = expressAsyncHandler(async (req, res) => {
   try {
     const { email, username, profilePic } = req.body;
 
-    if (!email || !username || !profilePic) {
+    if (!email || !username) {
       res.status(400);
       throw new Error("All fields are required");
     }
@@ -43,6 +43,7 @@ export const signInWithGoogle = expressAsyncHandler(async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Sign in failed!",
+      error: error.message,
     });
   }
 });
