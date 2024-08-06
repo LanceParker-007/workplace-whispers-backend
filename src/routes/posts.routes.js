@@ -9,7 +9,7 @@ import {
 const postsRouter = Router();
 
 postsRouter.post("/create-new", protect, createPost);
-postsRouter.post("/like-dislike-action", protect, handlePostAction);
-postsRouter.post("/get-all-posts", protect, getAllPosts);
+postsRouter.post("/like-dislike", protect, handlePostAction);
+postsRouter.post("/get-all", protect, getAllPosts);
 
 export default postsRouter;
