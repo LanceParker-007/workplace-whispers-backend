@@ -71,6 +71,7 @@ export const handlePostAction = expressAsyncHandler(async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Action performed successfully!",
+      post,
     });
   } catch (error) {
     res.status(500).json({
@@ -82,21 +83,31 @@ export const handlePostAction = expressAsyncHandler(async (req, res) => {
 });
 
 export const getAllPosts = expressAsyncHandler(async (req, res) => {
-  const { userId, page = 1, limit = 10 } = req.query;
+  try {
+    const { userId, page = 1, limit = 10 } = req.body;
 
-  const query = userId ? { user: userId } : {};
+    const query = userId ? { user: userId } : {};
 
-  const posts = await Post.find(query)
-    .sort({ createdAt: -1 }) // Optional: Sort posts by creation date
-    .skip((page - 1) * limit)
-    .limit(Number(limit));
+    const posts = await Post.find(query)
+      .sort({ createdAt: -1 }) // Optional: Sort posts by creation date
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
 
-  const totalPosts = await Post.countDocuments(query);
-  const totalPages = Math.ceil(totalPosts / limit);
+    const totalPosts = await Post.countDocuments(query);
+    const totalPages = Math.ceil(totalPosts / limit);
 
-  res.json({
-    posts,
-    totalPages,
-    currentPage: page,
-  });
+    res.status(200).json({
+      success: true,
+      message: "Fetched all posts successfuly",
+      posts,
+      totalPages,
+      currentPage: page,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch posts!",
+      error: error.message,
+    });
+  }
 });
