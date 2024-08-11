@@ -9,12 +9,12 @@ const postSchema = new mongoose.Schema(
     },
     companyName: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     companyLocation: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     content: {
@@ -40,6 +40,10 @@ const postSchema = new mongoose.Schema(
         default: 0,
       },
     ],
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

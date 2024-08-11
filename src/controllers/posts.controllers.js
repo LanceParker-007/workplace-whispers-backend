@@ -101,7 +101,6 @@ export const getAllPosts = expressAsyncHandler(async (req, res) => {
       message: "Fetched all posts successfuly",
       posts,
       totalPages,
-      currentPage: page,
     });
   } catch (error) {
     res.status(500).json({
