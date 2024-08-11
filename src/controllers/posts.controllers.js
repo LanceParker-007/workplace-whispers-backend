@@ -3,9 +3,9 @@ import Post from "../models/post.model.js";
 
 export const createPost = expressAsyncHandler(async (req, res) => {
   try {
-    const { title, companyName, companyLocation, content } = req.body;
+    const { title, companyName = "", companyLocation = "", content } = req.body;
 
-    if (!title || !companyName || !companyLocation || !content) {
+    if (!title || !content) {
       res.status(400);
       throw new Error("All fields are required");
     }
@@ -42,7 +42,7 @@ export const handlePostAction = expressAsyncHandler(async (req, res) => {
       throw new Error("Post ID and user action are required");
     }
 
-    const post = await Post.findById(postId);
+    const post = await Post.findOne({ _id: postId, isDeleted: false });
 
     if (!post) {
       res.status(404);
@@ -86,7 +86,9 @@ export const getAllPosts = expressAsyncHandler(async (req, res) => {
   try {
     const { userId, page = 1, limit = 10 } = req.body;
 
-    const query = userId ? { user: userId } : {};
+    const query = userId
+      ? { user: userId, isDeleted: false }
+      : { isDeleted: false };
 
     const posts = await Post.find(query)
       .sort({ createdAt: -1 }) // Optional: Sort posts by creation date
@@ -98,7 +100,7 @@ export const getAllPosts = expressAsyncHandler(async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Fetched all posts successfuly",
+      message: "Fetched all posts successfully",
       posts,
       totalPages,
     });
@@ -106,6 +108,41 @@ export const getAllPosts = expressAsyncHandler(async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch posts!",
+      error: error.message,
+    });
+  }
+});
+
+// New function to handle soft delete
+export const deletePost = expressAsyncHandler(async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      res.status(404);
+      throw new Error("Post not found");
+    }
+
+    // Check if the user is authorized to delete the post
+    if (post.user.toString() !== req.user.id) {
+      res.status(403);
+      throw new Error("User not authorized to delete this post");
+    }
+
+    // Soft delete the post
+    post.isDeleted = true;
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Post deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete post!",
       error: error.message,
     });
   }
