@@ -22,7 +22,7 @@ export const createPost = expressAsyncHandler(async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Post create successfully!",
+      message: "Post created successfully!",
       createdPost,
     });
   } catch (error) {
