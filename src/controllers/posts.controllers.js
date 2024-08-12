@@ -116,7 +116,7 @@ export const getAllPosts = expressAsyncHandler(async (req, res) => {
 // New function to handle soft delete
 export const deletePost = expressAsyncHandler(async (req, res) => {
   try {
-    const { postId } = req.params;
+    const { postId } = req.body;
 
     const post = await Post.findById(postId);
 
@@ -138,6 +138,7 @@ export const deletePost = expressAsyncHandler(async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Post deleted successfully",
+      deletedPost: post,
     });
   } catch (error) {
     res.status(500).json({
